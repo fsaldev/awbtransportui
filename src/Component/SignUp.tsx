@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import {
   Link as RouterLink,
   withRouter,
@@ -9,7 +9,6 @@ import { register } from "../services/registerApi";
 import NavbarCareer from "./NavbarCareer";
 import Footer from "./Footer";
 import { Result } from "../interfaces/registerinterface";
-import { user_data } from "./User";
 
 function isEmail(val: string) {
   let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -182,7 +181,7 @@ class SignUp extends Component<
                       name="user_name"
                       onChange={this.handleChange}
                     />
-                    {errors.user_name.length > 0 && (
+                    {errors.user_name?.length > 0 && (
                       <span style={{ color: "red" }}>{errors.user_name}</span>
                     )}
                   </div>
@@ -193,7 +192,7 @@ class SignUp extends Component<
                       name="email"
                       onChange={this.handleChange}
                     />
-                    {errors.email.length > 0 && (
+                    {errors.email?.length > 0 && (
                       <span style={{ color: "red" }}>{errors.email}</span>
                     )}
                   </div>
