@@ -26,6 +26,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { states } from "../Object/AllStates";
 import { styleClasses } from "../Object/styleClasses";
 import { RequireError } from "../Object/CommonObject";
+import { resolveOverFlowYearIssue } from "../Common/CommonVariables";
 
 export default function DrivingExperience() {
   const classes = styleClasses.useStyles();
@@ -123,6 +124,9 @@ export default function DrivingExperience() {
                                 message: RequireError,
                               },
                             })}
+                            inputProps={{
+                              max: resolveOverFlowYearIssue(),
+                            }}
                           ></TextField>
                         </Grid>
                         <Grid item xs={1}></Grid>
@@ -192,6 +196,9 @@ export default function DrivingExperience() {
                                 message: RequireError,
                               },
                             })}
+                            inputProps={{
+                              max: resolveOverFlowYearIssue(),
+                            }}
                           ></TextField>
                         </Grid>
                         <Grid item xs={5}>
@@ -208,6 +215,9 @@ export default function DrivingExperience() {
                                 message: RequireError,
                               },
                             })}
+                            inputProps={{
+                              max: resolveOverFlowYearIssue(),
+                            }}
                           ></TextField>
                         </Grid>
                         <Grid item xs={1}></Grid>

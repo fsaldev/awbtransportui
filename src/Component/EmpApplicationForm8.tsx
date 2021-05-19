@@ -12,8 +12,9 @@ import {
   Snackbar,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
+import InputMask from "react-input-mask";
 import { Container, Row } from "react-bootstrap";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -23,6 +24,10 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { styleClasses } from "../Common/styleClasses";
 import AlertComponent from "./SubComponents/AlertComponent";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -41,6 +46,7 @@ import {
   getMaxDate,
   getMaxAgeLimit,
   autoSubmit,
+  resolveOverFlowYearIssue,
 } from "../Common/CommonVariables";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
@@ -58,6 +64,7 @@ import { DynamicAddressComponent } from "./DynamicAddition/DynamicAddressCompone
 import { baseUrl } from "../shared/baseUrl";
 import { deleteFile } from "../services/removeFileApi";
 import PhoneNumberComponent from "./SubComponents/PhoneNumberComponent";
+import CheckBoxComponent from "./SubComponents/CheckBoxComponent";
 
 
 
@@ -107,6 +114,7 @@ export default function EmpApplicationForm8(props: Props) {
   const willingForDrugTestErrorMessage =
     "You must be willing to undertake a drug test as part of this hiring process";
 
+    const [alienNumber,setAlienNumber] = useState(manualStates.alien_registration_number);
     const [saveOnlySuccessSnackOpen, setSaveOnlySuccessSnackOpen] = React.useState(false);
     const saveOnlyHandleClose = (event?: React.SyntheticEvent, reason?: string) => {
       if (reason === "clickaway") {
@@ -145,12 +153,18 @@ export default function EmpApplicationForm8(props: Props) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    console.log(manualStates.united_state_citizen);
   }, []);
 
 
   const saveData = async (data:any,saveOnly:boolean) => {
     data.user_name = manualStates.user_name;
+    data.united_state_citizen = manualStates.united_state_citizen;
+    data.non_united_state_citizen = manualStates.non_united_state_citizen;
+    data.lawful_permanent_resident = manualStates.lawful_permanent_resident;
+    data.alien_authorized = manualStates.alien_authorized;
     // console.log(data);
+    // console.log(manualStates);
     let resdata;
     resdata = await update(data);
     if (resdata.data){
@@ -178,6 +192,10 @@ export default function EmpApplicationForm8(props: Props) {
     }
   }
 
+  const updateManualStates = (states:any)=>{
+    setManualStates(states);
+  }
+
   const saveUnFilledData = () => {
     const watchAll = getValues();
     saveData(watchAll,true);
@@ -185,8 +203,8 @@ export default function EmpApplicationForm8(props: Props) {
 
   const onSubmit = async (data: any) => {
   
-  //console.log("data form8 submit");
-  //console.log(data);
+  console.log("data form8 submit");
+  console.log(data);
   saveData(data,false);
 
     // data.user_name = manualStates.user_name;
@@ -222,9 +240,9 @@ export default function EmpApplicationForm8(props: Props) {
             alignItems="baseline"
             spacing={3}
           >
-            <Grid item xs={12} sm={12} md={10}>
-              <Paper elevation={3} className={classes.paper}>
-                <h4>AWB Transport Inc., Employment Application</h4>
+            <Grid item xs={12} sm={12} md={10} >
+              <Paper elevation={3} className={classes.paper} >
+                <h4 style={{textAlign:"center"}}>AWB Transport Inc., Employment Application</h4>
               </Paper>
             </Grid>
 
@@ -253,94 +271,91 @@ export default function EmpApplicationForm8(props: Props) {
                                   spacing={3}
                                 >
                                 
-                                  <Grid item xs={12} sm={12} md={5}>
-                                      <div style={{ paddingLeft: "13px" }}>
-                                          <RadioQuestions
-                                          id="united_state_citizen"
-                                          question="Do you have Citizenship of United States?"
-                                          optionList={["Yes", "No"]}
-                                          optionValue={["Yes", "No"]}
-                                          xsSize={12}
-                                          useForm={Forms}
-                                          isReq={reqBits.united_state_citizen}
-                                          defaultSelected={
-                                              manualStates.united_state_citizen
-                                          }
-                                          />
+                                  <Grid item xs={12} sm={12} md={11}>
+                                      <div style={{ paddingLeft: "13px", textAlign:"left"}}>
+                                        <CheckBoxComponent
+                                          controlProp={control}
+                                          manualStatesProp={manualStates}
+                                          idProp="united_state_citizen"
+                                          reqBitProp={reqBits.united_state_citizen}
+                                          setManualStateFunction={updateManualStates}
+                                          question="Do you have citizenship of United States?"
+                                        />
+                                      </div>
+                                      
+                                  </Grid>
+
+
+                                  <Grid item xs={12} sm={12} md={11}>
+                                      <div style={{ paddingLeft: "13px", textAlign:"left" }}>
+                                        <CheckBoxComponent
+                                          controlProp={control}
+                                          manualStatesProp={manualStates}
+                                          idProp="non_united_state_citizen"
+                                          reqBitProp={reqBits.non_united_state_citizen}
+                                          setManualStateFunction={updateManualStates}
+                                          question="Are you non United States citizen?"
+                                        />
                                       </div>
                                   </Grid>
 
 
-                                  <Grid item xs={12} sm={12} md={5}>
-                                      <div style={{ paddingLeft: "13px" }}>
-                                      <RadioQuestions
-                                          id="non_united_state_citizen"
-                                          question="Are you non unitied state citizen?"
-                                          xsSize={12}
-                                          optionList={["Yes", "No"]}
-                                          optionValue={["Yes", "No"]}
-                                          useForm={Forms}
-                                          isReq={reqBits.non_united_state_citizen}
-                                          defaultSelected={manualStates.non_united_state_citizen}
-                                          
-                                      />
+                                  <Grid item xs={12} sm={12} md={11}>
+                                      <div style={{ paddingLeft: "13px" , textAlign:"left"}}>
+                                        <CheckBoxComponent
+                                          controlProp={control}
+                                          manualStatesProp={manualStates}
+                                          idProp="lawful_permanent_resident"
+                                          reqBitProp={reqBits.lawful_permanent_resident}
+                                          setManualStateFunction={updateManualStates}
+                                          question="Are you Lawful Permanent Resident?"
+                                        />
                                       </div>
                                   </Grid>
 
 
-                                  <Grid item xs={12} sm={12} md={5}>
-                                      <div style={{ paddingLeft: "13px" }}>
-                                      <RadioQuestions
-                                          id="lawful_permanent_resident"
-                                          question="Are you Lawfull Permanent Resident?"
-                                          xsSize={12}
-                                          optionList={["Yes", "No"]}
-                                          optionValue={["Yes", "No"]}
-                                          useForm={Forms}
-                                          isReq={reqBits.lawful_permanent_resident}
-                                          defaultSelected={manualStates.lawful_permanent_resident}
-                                      />
-                                      </div>
-                                  </Grid>
-
-
-                                  <Grid item xs={12} sm={12} md={5}>
-                                      <div style={{ paddingLeft: "13px" }}>
-                                      <RadioQuestions
-                                          id="alien_authorized"
-                                          question="Are you Alien Authorized?"
-                                          xsSize={12}
-                                          optionList={["Yes", "No"]}
-                                          optionValue={["Yes", "No"]}
-                                          useForm={Forms}
-                                          isReq={reqBits.alien_authorized}
-                                          defaultSelected={manualStates.alien_authorized}
-                                      />
+                                  <Grid item xs={12} sm={12} md={11}>
+                                      <div style={{ paddingLeft: "13px", textAlign:"left" }}>
+                                        <CheckBoxComponent
+                                          controlProp={control}
+                                          manualStatesProp={manualStates}
+                                          idProp="alien_authorized"
+                                          reqBitProp={reqBits.alien_authorized}
+                                          setManualStateFunction={updateManualStates}
+                                          question="Are you Alien authorized?"
+                                        />
                                       </div>
                                   </Grid>
 
 
                                   <Grid item xs={12}  sm={12} md={5}>
-                                      <TextField
-                                        name="alien_registration_number"
-                                        variant="outlined"
-                                        size="small"
-                                        type="text"
-                                        label="Alien Registration Number"
-                                        className="col-12"
-                                        error={
-                                          errors && errors.alien_registration_number === undefined ? false : true
-                                        }
-                                        helperText={errors && errors.alien_registration_number ? errors.alien_registration_number.message : RequireError}
-                                        inputRef={register({
-                                          required: {
-                                            value: reqBits.alien_registration_number,
-                                            message: RequireError,
-                                          },
-                                          pattern:{value:/^[0-9-]*$/, message:"Only Chracters Allowed"},
-                                          minLength :{value:7,message:"Min 8 Digits"}
-                                        })}
-                                      ></TextField>
+                                      <InputMask
+                                        mask="A-999-999-999"
+                                        value={alienNumber}
+                                        onChange={(e:any)=>{setAlienNumber(e.target.value)}}
+                                        >
+                                        {() => 
+                                            <TextField
+                                            name="alien_registration_number"
+                                            variant="outlined"
+                                            size="small"
+                                            type="text"
+                                            label="Alien Registration Number"
+                                            className="col-12"
+                                            error={
+                                              errors && errors.alien_registration_number === undefined ? false : true
+                                            }
+                                            helperText={errors && errors.alien_registration_number ? errors.alien_registration_number.message : RequireError}
+                                            inputRef={register({
+                                              required: {
+                                                value: reqBits.alien_registration_number,
+                                                message: RequireError,
+                                              },
+                                              minLength :{value:9,message:"Min 9 Digits"}
+                                            })}
+                                          ></TextField>
+                                      }
+                                      </InputMask>
                                   </Grid>
 
 
@@ -360,7 +375,9 @@ export default function EmpApplicationForm8(props: Props) {
                                               inputRef={register({
                                                 required: reqBits.expiration_date,
                                               })}
-                                            
+                                              inputProps={{
+                                                max: resolveOverFlowYearIssue(),
+                                              }}
                                             ></TextField>
                                       </Grid>
 

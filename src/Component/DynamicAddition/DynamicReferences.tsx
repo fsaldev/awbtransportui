@@ -51,6 +51,7 @@ import { update } from "../../services/updateApi";
 import RadioQuestions from "../SubComponents/RadioQuestions";
 import ReactHookFormSelect from "../SubComponents/ReactHookFormSelect";
 import PhoneNumberComponent from "../SubComponents/PhoneNumberComponent";
+import { ZipCode } from "../SubComponents/ZipCode";
 
 type Props = {
   idPrefix: string;
@@ -392,45 +393,16 @@ export function DynamicReferences(props: Props) {
                 </Grid>
 
                 <Grid item xs={4}>
-                  <TextField
-                    name={`${props.idPrefix}[${index}].referenceZipCode`}
-                    defaultValue={item.referenceZipCode}
-                    variant="outlined"
-                    size="small"
-                    type="text"
-                    className="col-12"
-                    inputRef={register({
-                      required: {
-                        value: reqBits.referenceZipCode,
-                        message: RequireError,
-                      },
-                    })}
-                    label="Zip Code"
-                    error={
-                      errors &&
-                      errors[props.idPrefix] &&
-                      errors[props.idPrefix][index] &&
-                      errors[props.idPrefix][index].referenceZipCode
-                    }
-                    helperText={
-                      errors &&
-                      errors[props.idPrefix] &&
-                      errors[props.idPrefix][index] &&
-                      errors[props.idPrefix][index].referenceZipCode &&
-                      errors[props.idPrefix][index].referenceZipCode.message
-                    }
-
-                    // inputRef={register({
-                    //   required: {
-                    //     value: reqBits.referenceZipCode,
-                    //     message: RequireError,
-                    //   },
-                    //   pattern: {
-                    //     value: /^([0-9]{3}[-.][0-9]{3}[-.][0-9]{4}[-. ][x][0-9]{4})$/,
-                    //     message: WrongPatternError + " : ###-###-#### x####",
-                    //   },
-                    // })}
-                  ></TextField>
+                  <ZipCode
+                      mainId={props.idPrefix}
+                      subId="referenceZipCode"
+                      reqBit={reqBits.referenceZipCode}
+                      index={index}
+                      forms={props.useForm}
+                      item={item}
+                      className={"col-12"}
+                    ></ZipCode>
+                 
                 </Grid>
               </Grid>
             </AccordionDetails>
@@ -470,7 +442,7 @@ export function DynamicReferences(props: Props) {
               })
             }
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

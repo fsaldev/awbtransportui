@@ -1,5 +1,5 @@
 import React,{useEffect} from "react";
-import { Address } from "../../Common/CommonVariables";
+import { Address, resolveOverFlowYearIssue } from "../../Common/CommonVariables";
 import {
   Button,
   Divider,
@@ -138,6 +138,9 @@ export function DynamicTrafficConvictions(props: Props) {
                         message: RequireError,
                       },
                     })}
+                    inputProps={{
+                      max: resolveOverFlowYearIssue(),
+                    }}
                     defaultValue={item.dateOfViolation}
                     size="small"
                     helperText="Date Of Violation"
@@ -259,7 +262,7 @@ export function DynamicTrafficConvictions(props: Props) {
               })
             }
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

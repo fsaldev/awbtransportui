@@ -1,5 +1,5 @@
 import React , {useEffect , useState} from "react";
-import { Address, getTodayDate, RequireError } from "../../Common/CommonVariables";
+import { Address, getTodayDate, RequireError, resolveOverFlowYearIssue } from "../../Common/CommonVariables";
 import {
   Button,
   Divider,
@@ -100,9 +100,12 @@ export default function FromToDateComponent(props:Props){
                     variant="outlined"
                     type="date"
                     defaultValue={props.item[props.fromId]}
+                    inputProps={{
+                      max: resolveOverFlowYearIssue(),
+                    }}
                     size="small"
                     className="col-12"
-                    helperText={"From Date Require *"}
+                    helperText={"From Date Required *"}
                   ></TextField>
                 </Grid>
                 <Grid item xs={6}>
@@ -121,7 +124,8 @@ export default function FromToDateComponent(props:Props){
 
                     }}
                     inputProps={{
-                      min: fromDate,
+                      min: fromDate, 
+                      max: resolveOverFlowYearIssue(),
                     }}
                     error={
                       errors &&
@@ -132,10 +136,9 @@ export default function FromToDateComponent(props:Props){
                     variant="outlined"
                     type="date"
                     defaultValue={(props.item[props.toId] === undefined || props.item[props.toId] === null || props.item[props.toId] === "") ?  (props.index === 0?(getTodayDate()):"") : (props.item[props.toId]) }
-                    // defaultValue={(props.item[props.toId]) }
                     size="small"
                     className="col-12"
-                    helperText={"To Date Require *"}
+                    helperText={"To Date Required *"}
                   ></TextField>
                 </Grid>
 

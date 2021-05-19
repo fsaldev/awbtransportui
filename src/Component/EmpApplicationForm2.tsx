@@ -63,7 +63,7 @@ function EmpApplicationForm2(props: Props) {
     { value: "Male" },
     { value: "Female" },
     { value: "Other" },
-    { value: "I choose not to disclose" },
+    { value: "I don't wish to disclose" },
   ];
   const veteranStatus = [
     { value: "No Military Experience" },
@@ -127,7 +127,6 @@ function EmpApplicationForm2(props: Props) {
     resdata = await update(data);
     if (resdata.data){
       try {
-        // console.log(resdata);
         props.setData(resdata.data.data);
         setSuccesOrErrorBit("success");
         if(saveOnly){
@@ -137,9 +136,6 @@ function EmpApplicationForm2(props: Props) {
         }
 
       } catch (ex) {
-        // console.log("Error Exaption Seerver Error");
-        // console.log(resdata);
-        // console.log(ex);
         setSuccesOrErrorBit("error");
         if(saveOnly){
           setSaveOnlySuccessSnackOpen(true);
@@ -157,29 +153,7 @@ function EmpApplicationForm2(props: Props) {
 
 
   const onSubmit = async (data: any) => {
-    // //console.log(data);
     saveData(data,false);
-    // data.user_name = props.data.user_name;
-    // const resdata = await update(data);
-    // if(resdata.data){
-    //   try {
-    //     console.log(resdata);
-    //     props.setData(resdata.data.data);
-    //     //-------------SNACKBAR-------------
-    //     setSuccesOrErrorBit("success");
-    //     setSnackOpen(true);
-    //     //-------------SNACKBAR-------------
-    //     // props.handler[0]();
-    //   } catch (ex) {
-    //     console.log("Error Exaption Seerver Error");
-    //     console.log(resdata);
-    //     console.log(ex);
-    //    //-------------SNACKBAR-------------
-    //     setSuccesOrErrorBit("error");
-    //     setSnackOpen(true);
-    //     //-------------SNACKBAR-------------
-    //   }
-    // }
   };
 
 
@@ -243,16 +217,6 @@ function EmpApplicationForm2(props: Props) {
                     </Paper>
                   </Grid>
                   <Grid item xs={5}>
-                    {/* <ReactAutoComplete
-                      id="gender"
-                      label="Gender"
-                      className="col-12 text-left"
-                      useForm={Forms}
-                      optionList={gender}
-                      defaultValue={props.data.gender}
-                      isReq={reqBits["gender"]}
-                      error={errors && errors["gender"]}
-                    ></ReactAutoComplete> */}
 
                     <ReactHookFormSelect
                       nameVal="gender"
@@ -277,17 +241,7 @@ function EmpApplicationForm2(props: Props) {
                     </ReactHookFormSelect>
                   </Grid>
                   <Grid item xs={5}>
-                    {/* <ReactAutoComplete
-                      id="veteranStatus"
-                      label="Veteran Status"
-                      className="col-12 text-left"
-                      useForm={Forms}
-                      optionList={veteranStatus}
-                      defaultValue={props.data.veteranStatus}
-                      isReq={reqBits["veteranStatus"]}
-                      error={errors && errors["veteranStatus"]}
-                    ></ReactAutoComplete> */}
-
+                   
                     <ReactHookFormSelect
                       nameVal="veteranStatus"
                       label="Veteran Status"

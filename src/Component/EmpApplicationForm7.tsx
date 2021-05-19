@@ -33,7 +33,7 @@ import { update } from "../services/updateApi";
 import SignatureCanvas from "react-signature-canvas";
 import ReactHookFormSelect from "./SubComponents/ReactHookFormSelect";
 import RadioQuestions from "./SubComponents/RadioQuestions";
-import { reqBits, RequireError, states,autoSubmit } from "../Common/CommonVariables";
+import { reqBits, RequireError, states,autoSubmit, formatZipCode, resolveOverFlowYearIssue } from "../Common/CommonVariables";
 import { useRef, useState } from "react";
 import ReactAutoComplete from "./SubComponents/ReactAutoComplete";
 import { formatPhoneNumberIntl } from "react-phone-number-input";
@@ -210,6 +210,9 @@ export default function EmpApplicationForm7(props: Props) {
       }
     }
   }
+
+  const [zipCodeNumber,setZipCodeNumber] = useState(props.data.newEmployeerpostalCode);
+  const [prevEmployeerpostalCode,setPrevEmployeerpostalCode] = useState(props.data.prevEmployeerpostalCode);
 
   const saveUnFilledData = () => {
   const watchAll = getValues();
@@ -475,6 +478,9 @@ export default function EmpApplicationForm7(props: Props) {
                           message: RequireError,
                         },
                       })}
+                      inputProps={{
+                        max: resolveOverFlowYearIssue(),
+                      }}
                       helperText={(() => {
                         if (errors && errors.employeeDate) {
                           return (
@@ -555,75 +561,7 @@ export default function EmpApplicationForm7(props: Props) {
                           className="col-12"
                           useForms={Forms}
                         ></PhoneNumberComponent>
-                        {/* <TextField
-                          name="newEmployeerphone"
-                          variant="outlined"
-                          size="small"
-                          type="text"
-                          label="Phone Number"
-                          className="col-12"
-                          error={
-                            errors && errors.newEmployeerphone !== undefined
-                              ? true
-                              : false
-                          }
-                          // inputRef={register({
-                          //   required: {
-                          //     value: reqBits.newEmployeerphone,
-                          //     message: RequireError,
-                          //   },
-                          // })}
-                          // helperText={
-                          //   errors &&
-                          //   errors.newEmployeerphone &&
-                          //   errors.newEmployeerphone.message
-                          // }
-                          value={phonePattern}
-                          // onChange={(e) => {
-                          //   if (e.target.value.length > 11) {
-                          //     const n = formatPhoneNumberIntl(e.target.value);
-                          //     if (n) {
-                          //       //console.log(n);
-                          //       setPhonePatten(n);
-                          //     } else {
-                          //       setPhonePatten(e.target.value);
-                          //     }
-                          //   } else {
-                          //     setPhonePatten(e.target.value);
-                          //   }
-                          // }}
-                          helperText={errors["newEmployeerphone"] === undefined ? (RequireError + " " + "+# ### ### #### ext.####") : errors["newEmployeerphone"].message}
-                          inputRef={register({
-                            required: {
-                              value: reqBits.newEmployeerphone,
-                              message: RequireError,
-                            },
-                          })}
-                          onChange={(e:any) => {
-                            let val = e.target.value;
-                            if (val.length > 11) {
-                              const n = formatPhoneNumberIntl(val);
-                              if (n) {
-                                setPhonePatten(n);
-                              } else {
-                                setPhonePatten(val);
-                              }
-                            } else {
-                              setPhonePatten(val);
-                            }
-                          }}
-                          onBlur={(e: any) => {
-                            //console.log();
-                            //console.log("EVENT ", e.target.value);
-                          }}
-
-                          // inputRef={register({
-                          //   required: {
-                          //     value: reqBits.newEmployeerphone,
-                          //     message: RequireError,
-                          //   },
-                          // })}
-                        ></TextField> */}
+                     
                       </Grid>
                       <Grid item xs={12} sm={12} md={6}>
                         <TextField
@@ -735,16 +673,7 @@ export default function EmpApplicationForm7(props: Props) {
                         ></TextField>
                       </Grid>
                       <Grid item xs={12} sm={12} md={4}>
-                        {/* <ReactAutoComplete
-                          id="newEmployeerState"
-                          className="col-12"
-                          useForm={Forms}
-                          label="States"
-                          optionList={states}
-                          defaultValue={props.data?.newEmployeerState}
-                          error={errors && errors["newEmployeerState"]}
-                          isReq={reqBits.newEmployeerState}
-                        ></ReactAutoComplete> */}
+                   
                         <ReactHookFormSelect
                           nameVal="newEmployeerState"
                           label="State"
@@ -781,6 +710,12 @@ export default function EmpApplicationForm7(props: Props) {
                             errors.newEmployeerpostalCode !== undefined
                               ? true
                               : false
+                          }
+                          value={zipCodeNumber}
+                          onChange={
+                            (e:any)=>{
+                              setZipCodeNumber(formatZipCode(e.target.value));
+                            }
                           }
                           inputRef={register({
                             required: {
@@ -875,44 +810,6 @@ export default function EmpApplicationForm7(props: Props) {
                           className="col-12"
                           useForms={Forms}
                         ></PhoneNumberComponent>
-                        {/* <TextField
-                          name="prevEmployeerphone"
-                          variant="outlined"
-                          size="small"
-                          type="text"
-                          label="Prev Employer Phone"
-                          className="col-12"
-                          error={
-                            errors && errors.prevEmployeerphone !== undefined
-                              ? true
-                              : false
-                          }
-                          inputRef={register({
-                            required: {
-                              value: reqBits.prevEmployeerphone,
-                              message: RequireError,
-                            },
-                          })}
-                          helperText={
-                            errors &&
-                            errors.prevEmployeerphone &&
-                            errors.prevEmployeerphone.message
-                          }
-                          value={prevEmplpoyerPhonePattern}
-                          onChange={(e) => {
-                            if (e.target.value.length > 11) {
-                              const n = formatPhoneNumberIntl(e.target.value);
-                              if (n) {
-                                //console.log(n);
-                                setprevEmplpoyerPhonePattern(n);
-                              } else {
-                                setprevEmplpoyerPhonePattern(e.target.value);
-                              }
-                            } else {
-                              setprevEmplpoyerPhonePattern(e.target.value);
-                            }
-                          }}
-                        ></TextField> */}
                       </Grid>
                       <Grid item xs={12} sm={12} md={6}>
                         <TextField
@@ -1024,16 +921,6 @@ export default function EmpApplicationForm7(props: Props) {
                         ></TextField>
                       </Grid>
                       <Grid item xs={12} sm={12} md={4}>
-                        {/* <ReactAutoComplete
-                          id="prevEmployeerState"
-                          className="col-12"
-                          useForm={Forms}
-                          label="States"
-                          optionList={states}
-                          defaultValue={props.data?.prevEmployeerState}
-                          isReq={reqBits.prevEmployeerState}
-                          error={errors && errors["prevEmployeerState"]}
-                        ></ReactAutoComplete> */}
                         <ReactHookFormSelect
                           nameVal="prevEmployeerState"
                           label="States"
@@ -1083,6 +970,12 @@ export default function EmpApplicationForm7(props: Props) {
                               message: "Please Input 5 Digits only",
                             },
                           })}
+                          value={prevEmployeerpostalCode}
+                          onChange={
+                            (e:any)=>{
+                              setPrevEmployeerpostalCode(formatZipCode(e.target.value));
+                            }
+                          }
                           helperText={
                             errors &&
                             errors.prevEmployeerpostalCode &&
@@ -1096,7 +989,9 @@ export default function EmpApplicationForm7(props: Props) {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} sm={12} md={10}>
+{/* Saleem Said to hide this section only used by previous employer */}
+
+            {/* <Grid item xs={12} sm={12} md={10}>
               <Paper
                 elevation={3}
                 style={{
@@ -1280,58 +1175,7 @@ export default function EmpApplicationForm7(props: Props) {
                         className="col-12"
                         useForms={Forms}
                       ></PhoneNumberComponent>
-
-                      {/* <TextField
-                        name="nameOfPersonProvidingInformationPhone"
-                        variant="outlined"
-                        size="small"
-                        type="text"
-                        label="Phone Number"
-                        className="col-12"
-                        error={
-                          errors &&
-                          errors.nameOfPersonProvidingInformationPhone !==
-                            undefined
-                            ? true
-                            : false
-                        }
-                        inputRef={register({
-                          required: {
-                            value:
-                              reqBits.nameOfPersonProvidingInformationPhone,
-                            message: RequireError,
-                          },
-                        })}
-                        helperText={
-                          errors &&
-                          errors.nameOfPersonProvidingInformationPhone &&
-                          errors.nameOfPersonProvidingInformationPhone.message
-                        }
-                        value={
-                          nameOfPersonProvidingInformationPhonePattern
-                            ? nameOfPersonProvidingInformationPhonePattern
-                            : props.data.nameOfPersonProvidingInformationPhone
-                        }
-                        onChange={(e) => {
-                          if (e.target.value.length > 11) {
-                            const n = formatPhoneNumberIntl(e.target.value);
-                            if (n) {
-                              //console.log(n);
-                              setNameOfPersonProvidingInformationPhonePattern(
-                                n
-                              );
-                            } else {
-                              setNameOfPersonProvidingInformationPhonePattern(
-                                e.target.value
-                              );
-                            }
-                          } else {
-                            setNameOfPersonProvidingInformationPhonePattern(
-                              e.target.value
-                            );
-                          }
-                        }}
-                      ></TextField> */}
+                    
                     </Grid>
                     <Grid item xs={12} sm={12} md={5}>
                       <TextField
@@ -1353,6 +1197,9 @@ export default function EmpApplicationForm7(props: Props) {
                             message: RequireError,
                           },
                         })}
+                        inputProps={{
+                          max: resolveOverFlowYearIssue(),
+                        }}
                         helperText={(() => {
                           if (
                             errors &&
@@ -1371,7 +1218,7 @@ export default function EmpApplicationForm7(props: Props) {
                   </Grid>
                 </Grid>
               </Paper>
-            </Grid>
+            </Grid> */}
 
             {/* BUTTON Start */}
             <Grid item xs={12} sm={12} md={11}>

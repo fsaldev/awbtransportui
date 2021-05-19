@@ -137,49 +137,7 @@ export function DynamicEmploymentHistoryComponent(props: Props) {
                        defaultFromDate={item.employmentHistoryfrom}
                        defaultToDate={item.employmentHistoryTo}            
                 />
-                {/* <Grid item xs={6}>
-                  <TextField
-                    name={`${props.idPrefix}[${index}].employmentHistoryfrom`}
-                    variant="outlined"
-                    size="small"
-                    type="date"
-                    className="col-12"
-                    defaultValue={item.employmentHistoryfrom}
-                    //useForms Handling Start
-                    error={
-                      errors &&
-                      errors[props.idPrefix] &&
-                      errors[props.idPrefix][index] &&
-                      errors[props.idPrefix][index].employmentHistoryfrom
-                    }
-                    inputRef={register({
-                      required: reqBits.employmentHistoryfrom,
-                    })}
-                    helperText={reqBits.employmentHistoryfrom && RequireError}
-                    //useForms Handling End
-                  ></TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    name={`${props.idPrefix}[${index}].employmentHistoryTo`}
-                    variant="outlined"
-                    size="small"
-                    defaultValue={item.employmentHistoryTo}
-                    type="date"
-                    className="col-12"
-                    error={
-                      errors &&
-                      errors[props.idPrefix] &&
-                      errors[props.idPrefix][index] &&
-                      errors[props.idPrefix][index].employmentHistoryTo
-                    }
-                    inputRef={register({
-                      required: reqBits.employmentHistoryTo,
-                    })}
-                    helperText={reqBits.employmentHistoryTo && RequireError}
-                    //useForms Handling End
-                  ></TextField>
-                </Grid> */}
+              
                 <Grid item xs={6}>
                   <TextField
                     name={`${props.idPrefix}[${index}].employmentHistorystatus`}
@@ -418,7 +376,7 @@ export function DynamicEmploymentHistoryComponent(props: Props) {
               })
             }
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

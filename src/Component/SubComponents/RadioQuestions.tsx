@@ -171,7 +171,6 @@ export default function RadioQuestions(props: Props) {
                                 setValue(v);
                               //console.log("value");
                               //console.log(value);
-                              
                               }}
                               value={props.optionValue[index]}
                               control={<Radio />}

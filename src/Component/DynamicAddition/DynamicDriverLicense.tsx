@@ -4,6 +4,7 @@ import {
   EmploymentAccidentHistories,
   driverLicenseDummyElement,
   licenseType,
+  resolveOverFlowYearIssue,
 } from "../../Common/CommonVariables";
 import {
   Button,
@@ -139,6 +140,9 @@ export function DynamicDriverLicense(props: Props) {
                         message: RequireError,
                       },
                     })}
+                    inputProps={{
+                      max: resolveOverFlowYearIssue(),
+                    }}
                     className="col-12"
                     variant="outlined"
                     size="small"
@@ -280,31 +284,7 @@ export function DynamicDriverLicense(props: Props) {
                     className="col-12"
                   />
                 </Grid>
-                {/* <Grid item xs={6}>
-                  <TextField
-                    name={`${props.idPrefix}[${index}].licenceExpirationDate`}
-                    defaultValue={item.licenceExpirationDate}
-                    error={
-                      errors &&
-                      errors[props.idPrefix] &&
-                      errors[props.idPrefix][index] &&
-                      errors[props.idPrefix][index].licenceExpirationDate
-                    }
-                    inputRef={register({
-                      required: {
-                        value: reqBits.licenceExpirationDate,
-                        message: RequireError,
-                      },
-                    })}
-                    id="outlined-multiline-static"
-                    helperText="Expiration Date"
-                    size="small"
-                    type="date"
-                    rows={4}
-                    variant="outlined"
-                    className="col-12"
-                  />
-                </Grid> */}
+              
               </Grid>
             </AccordionDetails>{" "}
             <AccordionActions
@@ -343,7 +323,7 @@ export function DynamicDriverLicense(props: Props) {
               })
             }
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

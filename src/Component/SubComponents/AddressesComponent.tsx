@@ -38,6 +38,7 @@ import {
   reqBits,
   states,
   AddressErrorsList,
+  resolveOverFlowYearIssue,
 } from "../../Common/CommonVariables";
 import { update } from "../../services/updateApi";
 import RadioQuestions from ".././SubComponents/RadioQuestions";
@@ -135,7 +136,7 @@ export default function AddressesComponent(props: Props) {
                       variant="outlined"
                       size="small"
                       type="text"
-                      label={"Address Require"}
+                      label={"Address Required"}
                       required={reqBits.lastYearAddress === true}
                       value={addressesState[index].lastYearAddress}
                       onChange={(e) => {
@@ -252,7 +253,10 @@ export default function AddressesComponent(props: Props) {
                       type="date"
                       size="small"
                       className="col-12"
-                      helperText={"From Date Require *"}
+                      helperText={"From Date Required *"}
+                      inputProps={{
+                        max: resolveOverFlowYearIssue(),
+                      }}
                       required={reqBits.lastYearAddressfrom == true}
                       value={addressesState[index].lastYearAddressfrom}
                       onChange={(e) => {
@@ -273,9 +277,12 @@ export default function AddressesComponent(props: Props) {
                       type="date"
                       size="small"
                       className="col-12"
-                      helperText={"To Date Require *"}
+                      helperText={"To Date Required *"}
                       required={reqBits.lastYearAddressTo == true}
                       value={addressesState[index].lastYearAddressTo}
+                      inputProps={{
+                        max: resolveOverFlowYearIssue(),
+                      }}
                       onChange={(e) => {
                         const addrNew = {
                           ...addressesState[index],
@@ -328,7 +335,7 @@ export default function AddressesComponent(props: Props) {
               //console.log(addressesState);
             }}
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

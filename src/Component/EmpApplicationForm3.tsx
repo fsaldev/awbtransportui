@@ -13,6 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import SignatureCanvas from "react-signature-canvas";
 import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
 import { useEffect } from "react";
+import ChipInput from 'material-ui-chip-input'
 import {
   dummyAddrData,
   debug,
@@ -36,7 +37,14 @@ import {
   snackbarDuratuion,
   canvasMinWidth,
   autoSubmit,
+  formatZipCode,
+  resolveOverFlowYearIssue,
 } from "../Common/CommonVariables";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 import { Addresses, tReferences, getMaxDate, getMaxAgeLimit } from "../Common/CommonVariables";
 import RadioQuestions from "./SubComponents/RadioQuestions";
 import AddressesComponent from "./SubComponents/AddressesComponent";
@@ -62,6 +70,7 @@ import { formatPhoneNumberIntl } from "react-phone-number-input";
 import AlertComponent from "./SubComponents/AlertComponent";
 import PhoneNumberComponent from "./SubComponents/PhoneNumberComponent";
 import useWindowDimensionHook from "./MyHook/WindowDimension";
+import { isConstructorDeclaration } from "typescript";
 
 
 export const useStyles = makeStyles((theme: Theme) =>
@@ -174,6 +183,7 @@ function EmpApplicationForm3(props: Props) {
       sigPad.current?.clear();
       sigPad.current.fromDataURL(base64SignatureImage);
     }
+    window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
@@ -185,9 +195,6 @@ function EmpApplicationForm3(props: Props) {
   
 
   const clearSigPad = () => {
-  //console.log("ref");
-  //console.log(sigPad);
-  //console.log(typeof sigPad);
     if (sigPad && sigPad.current) {
       sigPad.current?.clear();
       base64SignatureImage = "";
@@ -248,6 +255,7 @@ function EmpApplicationForm3(props: Props) {
   };
   //-------------SNACKBAR-------------
 
+  
 
   const saveData = async (data:any,saveOnly:boolean) => {
 
@@ -297,6 +305,41 @@ function EmpApplicationForm3(props: Props) {
       saveData(watchAll,true);
   }
 
+  const [listOfStates,setListOfStates] = useState(["NA","NA"]);
+
+  function handleAddChip(chip:any){
+    listOfStates.push(chip);
+    setListOfStates(listOfStates);
+  }
+
+  function insertWestStates(e:any)
+  {
+
+  }
+
+  function insertMidWestStates(e:any)
+  {
+    
+  }
+
+  function insertNorthEastStates(e:any)
+  {
+    
+  }
+
+  function insertSouthStates(e:any)
+  {
+    
+  }
+
+  function handleDeleteChip(chip:any, index:number){
+    console.log("list before");
+    console.log(listOfStates);
+    listOfStates.splice(index);
+    console.log("list after");
+    console.log(listOfStates);
+    setListOfStates(listOfStates);
+  }
 
   const onSubmit = async (data: any) => {
     if (sigPad.current && sigPad.current.isEmpty()) {
@@ -323,26 +366,7 @@ function EmpApplicationForm3(props: Props) {
 
     saveData(data,false);
 
-    // data.user_name = props.data.user_name;
-    // const resdata = await update(data);
-    // if (resdata.data){
-    //     try {
-    //     props.setData(resdata.data.data);
-    //     //-------------SNACKBAR-------------
-    //     setSuccesOrErrorBit("success");
-    //     setSnackOpen(true);
-    //     //-------------SNACKBAR-------------
-    //     // props.handler[0]();
-    //   } catch (ex) {
-    //     console.log("Error Exaption Seerver Error");
-    //     console.log(resdata);
-    //     console.log(ex);
-    //   //-------------SNACKBAR-------------
-    //     setSuccesOrErrorBit("error");
-    //     setSnackOpen(true);
-    //     //-------------SNACKBAR-------------
-    //   }
-    // }
+
   };
 
   const calculateAge = (val:string)=>{
@@ -409,6 +433,8 @@ function EmpApplicationForm3(props: Props) {
     //  //console.log(updatedAddresses);
     UpdateAddressesList = updatedAddresses;
   };
+
+  const [zipCodeNumber,setZipCodeNumber] = useState(props.data.companyPostCode);
 
   return (
     <React.Fragment>
@@ -561,6 +587,12 @@ function EmpApplicationForm3(props: Props) {
                                     errors.companyPostCode &&
                                     errors.companyPostCode?.message
                                   }
+                                  value={zipCodeNumber}
+                                  onChange={
+                                    (e:any)=>{
+                                      setZipCodeNumber(formatZipCode(e.target.value));
+                                    }
+                                  }
                                   inputRef={register({
                                     required: {
                                       value: reqBits.companyPostCode,
@@ -635,6 +667,9 @@ function EmpApplicationForm3(props: Props) {
                                 inputRef={register({
                                   required: reqBits.applicationApplyDate,
                                 })}
+                                inputProps={{
+                                  max: resolveOverFlowYearIssue(),
+                                }}
                                 defaultValue={props.data.applicationApplyDate}
                                 helperText={"Application Date: " + RequireError}
                               ></TextField>
@@ -728,7 +763,7 @@ function EmpApplicationForm3(props: Props) {
                                   className="col-12"
                                   mainId="applicantPhoneNumber"
                                   label="Phone Number"
-                                  defaultValue={props.data.applicantPhoneNumber}
+                                  defaultValue={props.data.phone_number}
                                   useForms={Forms}
                             ></PhoneNumberComponent>
                            
@@ -745,7 +780,7 @@ function EmpApplicationForm3(props: Props) {
                                     ? false
                                     : true
                                 }
-                                label="Emergency: First Name"
+                                label="Emergency Contact: First Name"
                                 helperText={errors && errors.emergencyContactfirstName ? errors.emergencyContactfirstName.message : RequireError}
                                 inputRef={register({
                                   required: reqBits.emergencyContactfirstName,
@@ -765,7 +800,7 @@ function EmpApplicationForm3(props: Props) {
                                     ? false
                                     : true
                                 }
-                                label="Emergency: Last Name"
+                                label="Emergency Contact: Last Name"
                                 inputRef={register({
                                   required: reqBits.emergencyContactlastName,
                                   pattern:{value:/^[a-zA-Z ]{1,30}$/, message:"Only Chracters Allowed"}
@@ -775,44 +810,13 @@ function EmpApplicationForm3(props: Props) {
                             </Grid>
                             <Grid item xs={12} style={{ marginBottom: "10px" }}>
                             <PhoneNumberComponent
-                                  label="Emergency: Mobile Number"
+                                  label="Emergency Contact: Mobile Number"
                                   mainId="emergencyContactNumber"
                                   defaultValue={props.data.emergencyContactNumber}
                                   className="col-12"
                                   useForms={Forms}
                             ></PhoneNumberComponent>
-                              {/* <TextField
-                                name="emergencyContactNumber"
-                                variant="outlined"
-                                size="small"
-                                type="tel"
-                                className="col-12"
-                                error={
-                                  errors.emergencyContactNumber == undefined
-                                    ? false
-                                    : true
-                                }
-                                inputRef={register({
-                                  required: reqBits.emergencyContactNumber,
-                                })}
-                                label="Emergency: Mobile Number"
-                                helperText={RequireError}
-                                onChange={(e) => {
-                                  if (e.target.value.length > 11) {
-                                    const n = formatPhoneNumberIntl(
-                                      e.target.value
-                                    );
-                                    if (n) {
-                                      //console.log(n);
-                                      setEmergencyPhonePatten(n);
-                                    } else {
-                                      setEmergencyPhonePatten(e.target.value);
-                                    }
-                                  } else {
-                                    setEmergencyPhonePatten(e.target.value);
-                                  }
-                                }}
-                              ></TextField> */}
+                            
                             </Grid>
                             <Grid item xs={6} style={{ marginBottom: "10px" }}>
                             <TextField
@@ -866,17 +870,13 @@ function EmpApplicationForm3(props: Props) {
                                     ? false
                                     : true
                                 }
-                                helperText="Phyical Exam Expiration Date Required *"
+                                inputProps={{
+                                  max: resolveOverFlowYearIssue(),
+                                }}
+                                helperText="DOT Date Required *"
                                 inputRef={register({
                                   required: reqBits.physicalExamExpirationDate,
                                 })}
-                                // helperText={
-                                //   errors.physicalExamExpirationDate == undefined
-                                //     ? ""
-                                //     : "Exp Date " +
-                                //       errors.physicalExamExpirationDate?.type.toUpperCase() +
-                                //       " Error"
-                                // }
                               ></TextField>
                             </Grid>
                           </Grid>
@@ -909,7 +909,7 @@ function EmpApplicationForm3(props: Props) {
                         <DynamicAddressComponent
                           idPrefix="applicantAddresses"
                           setAddresses={updateAddressList}
-                          addressesList={props.data.applicantAddresses}
+                          addressesList={props.data.addresses}
                           addressId="applicantAddresses"
                           cityId=""
                           minElementLimit={0}
@@ -1018,8 +1018,8 @@ function EmpApplicationForm3(props: Props) {
                       <RadioQuestions
                         id="applicantCollegeGrade"
                         question="Please circle the highest Collage grade completed"
-                        optionValue={["1", "2", "3", "4"]}
-                        optionList={["1", "2", "3", "4"]}
+                        optionValue={["None","1", "2", "3", "4"]}
+                        optionList={["None","1", "2", "3", "4"]}
                         defaultSelected={props.data.applicantCollegeGrade}
                         isReq={reqBits.applicantCollegeGrade}
                         useForm={Forms}
@@ -1032,8 +1032,8 @@ function EmpApplicationForm3(props: Props) {
                       <RadioQuestions
                         id="applicantPostGraduateGrade"
                         question="Please circle the highest Post Graduate grade completed"
-                        optionValue={["1", "2", "3", "4"]}
-                        optionList={["1", "2", "3", "4"]}
+                        optionValue={["None","1", "2", "3", "4"]}
+                        optionList={["None","1", "2", "3", "4"]}
                         defaultSelected={props.data.applicantPostGraduateGrade}
                         isReq={reqBits.applicantPostGraduateGrade}
                         useForm={Forms}
@@ -1118,6 +1118,41 @@ function EmpApplicationForm3(props: Props) {
                 elevation={3}
                 className={(classes.heading, classes.paperProminantStyle)}
               >
+                {/* <ChipInput
+                  value={listOfStates}
+                  onAdd={(chip) => handleAddChip(chip)}
+                  onDelete={(chip, index) => handleDeleteChip(chip, index)}
+                /> */}
+                {/* <FormControl component="fieldset">
+                  <FormLabel component="legend">Select Multiple States</FormLabel>
+                    <FormGroup aria-label="position" row>
+                      <FormControlLabel
+                        value="West"
+                        control={<Checkbox color="primary" />}
+                        label="West"
+                        labelPlacement="start"
+                        onClick={insertWestStates}
+                      />
+                      <FormControlLabel
+                        value="Mid West"
+                        control={<Checkbox color="primary" />}
+                        label="Mid West"
+                        labelPlacement="start"
+                      />
+                      <FormControlLabel
+                        value="North East"
+                        control={<Checkbox color="primary" />}
+                        label="North East"
+                        labelPlacement="start"
+                      />
+                      <FormControlLabel
+                        value="South"
+                        control={<Checkbox color="primary" />}
+                        label="South"
+                        labelPlacement="start"
+                      />
+                    </FormGroup>
+                </FormControl> */}
                 <TextField
                   id="outlined-multiline-static"
                   label={`List states operated in, for the last five (5) years: `}

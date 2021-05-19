@@ -50,7 +50,7 @@ class EmploymentApplication extends Component<
   constructor(props: any) {
     super(props);
     this.state = {
-      formCounter: (for_production===true)?(1):(3),
+      formCounter: (for_production===true)?(4):(3),
     };
 
     this.gotoNextForm = this.gotoNextForm.bind(this);
@@ -207,7 +207,7 @@ class EmploymentApplication extends Component<
               ) : (
                 ""
               )}
-              {this.state.formCounter === 5 ? (
+              {/* {this.state.formCounter === 5 ? (
                 <EmpApplicationForm5
                   data={this.context.data}
                   handler={[this.gotoNextForm, this.gotoPreviousForm]}
@@ -215,8 +215,8 @@ class EmploymentApplication extends Component<
                 ></EmpApplicationForm5>
               ) : (
                 ""
-              )}
-              {this.state.formCounter === 6 ? (
+              )} */}
+              {this.state.formCounter === 5 ? (
                 <EmpApplicationForm6
                   data={this.context.data}
                   handler={[this.gotoNextForm, this.gotoPreviousForm]}
@@ -225,7 +225,7 @@ class EmploymentApplication extends Component<
               ) : (
                 ""
               )}
-              {this.state.formCounter == 7 ? (
+              {this.state.formCounter == 6 ? (
                 <EmpApplicationForm7
                   data={this.context.data}
                   handler={[this.gotoNextForm, this.gotoPreviousForm]}
@@ -234,7 +234,7 @@ class EmploymentApplication extends Component<
               ) : (
                 ""
               )}
-              {this.state.formCounter == 8 ? (
+              {this.state.formCounter == 7 ? (
                 <EmpApplicationForm8
                   data={this.context.data}
                   handler={[this.gotoNextForm, this.gotoPreviousForm]}
@@ -243,7 +243,7 @@ class EmploymentApplication extends Component<
               ) : (
                 ""
               )}
-              {this.state.formCounter == 9 ? (
+              {this.state.formCounter == 8 ? (
                 <EmpApplicationAllDataFilled
                   data={this.context.data}
                   handler={[this.gotoNextForm, this.gotoPreviousForm]}

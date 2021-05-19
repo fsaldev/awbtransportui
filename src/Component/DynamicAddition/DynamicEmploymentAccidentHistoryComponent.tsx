@@ -2,6 +2,7 @@ import React,{useEffect} from "react";
 import {
   Address,
   EmploymentAccidentHistories,
+  resolveOverFlowYearIssue,
 } from "../../Common/CommonVariables";
 import {
   Button,
@@ -136,6 +137,9 @@ export function DynamicEmploymentAccidentHistoryComponent(props: Props) {
                         message: RequireError,
                       },
                     })}
+                    inputProps={{
+                      max: resolveOverFlowYearIssue(),
+                    }}
                     name={`${props.idPrefix}[${index}].dateOfAccident`}
                     defaultValue={item.dateOfAccident}
                     helperText={reqBits.dateOfAccident && RequireError + " Date of Accident"}
@@ -281,7 +285,7 @@ export function DynamicEmploymentAccidentHistoryComponent(props: Props) {
               })
             }
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

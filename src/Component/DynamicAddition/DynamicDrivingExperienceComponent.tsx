@@ -178,51 +178,7 @@ export function DynamicDrivingExperienceComponent(props: Props) {
                   defaultToDate={item.experienceToDate}
                   ></FromToDateComponent>
 
-                {/* <Grid item xs={6}>
-                  <TextField
-                    name={`${props.idPrefix}[${index}].experienceFromDate`}
-                    error={
-                      errors &&
-                      errors[props.idPrefix] &&
-                      errors[props.idPrefix][index] &&
-                      errors[props.idPrefix][index].experienceFromDate
-                    }
-                    inputRef={register({
-                      required: reqBits.experienceFromDate,
-                    })}
-                    helperText={
-                      reqBits.experienceFromDate && "From Date " + RequireError
-                    }
-                    defaultValue={item.experienceFromDate}
-                    variant="outlined"
-                    size="small"
-                    type="date"
-                    className="col-12"
-                  ></TextField>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    name={`${props.idPrefix}[${index}].experienceToDate`}
-                    error={
-                      errors &&
-                      errors[props.idPrefix] &&
-                      errors[props.idPrefix][index] &&
-                      errors[props.idPrefix][index].experienceToDate
-                    }
-                    inputRef={register({
-                      required: {
-                        value: reqBits.experienceToDate,
-                        message: RequireError,
-                      },
-                    })}
-                    variant="outlined"
-                    defaultValue={item.experienceToDate}
-                    size="small"
-                    type="date"
-                    helperText="To Date"
-                    className="col-12"
-                  ></TextField>
-                </Grid> */}
+              
               </Grid>
             </AccordionDetails>
             <AccordionActions
@@ -261,7 +217,7 @@ export function DynamicDrivingExperienceComponent(props: Props) {
               })
             }
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

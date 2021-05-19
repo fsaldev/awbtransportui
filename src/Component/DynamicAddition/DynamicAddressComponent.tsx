@@ -1,5 +1,5 @@
 import React , {useEffect,useState} from "react";
-import { Address } from "../../Common/CommonVariables";
+import { Address, formatZipCode } from "../../Common/CommonVariables";
 import {
   Button,
   Divider,
@@ -47,6 +47,7 @@ import RadioQuestions from "../SubComponents/RadioQuestions";
 import ReactHookFormSelect from "../SubComponents/ReactHookFormSelect";
 import ReactAutoComplete from "../SubComponents/ReactAutoComplete";
 import FromToDateComponent from "../SubComponents/FromToDate";
+import { ZipCode } from "../SubComponents/ZipCode";
 
 type Props = {
   idPrefix: string;
@@ -60,6 +61,7 @@ type Props = {
   toDateId: string;
   forms: any;
   minElementLimit:number;
+  loadDefaultAgain?:boolean;
 };
 
 const RequireError: string = "Required *";
@@ -69,7 +71,6 @@ const WrongPatternError: string = "Wrong Pattern";
 
 export function DynamicAddressComponent(props: Props) {
   const classes = styleClasses.useStyles();
-  // print("Address List : ", props.addressesList);
   const [fromDate,setFromDate] = useState("");
   const {
     register,
@@ -80,8 +81,6 @@ export function DynamicAddressComponent(props: Props) {
     setError,
     errors,
   } = props.forms;
-//console.log("props.forms");  
-//console.log(props.forms);  
   const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
     {
       control,
@@ -91,17 +90,20 @@ export function DynamicAddressComponent(props: Props) {
 
   const submit = (e: any) => {
     e.preventDefault();
-    //console.log(e.target.data);
   };
 
   useEffect(()=>{
-    if(fields.length === 0){
+    if(fields.length === 1 && fields[0].lastYearAddress == "" && fields[0].lastYearAddressCity == ""  && fields[0].lastYearAddressState == ""){
+      remove(0);
       append(props.addressesList);
+      setTimeout(windowTop,1000);
     }
   },[]);
 
-   
-
+  const windowTop = () => {
+    window.scrollTo(0, 0);
+  }
+  
 
   return (
     <React.Fragment>
@@ -197,47 +199,15 @@ export function DynamicAddressComponent(props: Props) {
                   </ReactHookFormSelect>
                 </Grid>
                 <Grid item xs={4}>
-                  <TextField
-                    name={`${props.addressId}[${index}].lastYearAddressZipCode`}
-                    inputRef={register({
-                      required: {
-                        value: reqBits.lastYearAddressZipCode,
-                        message: RequireError,
-                      },
-                      maxLength: {
-                        value: 5,
-                        message: "Max 5 Digits",
-                      },
-                      minLength: {
-                        value: 5,
-                        message: "Min 5 Digits",
-                      },
-                    })}
-                    error={
-                      errors &&
-                      errors[props.addressId] &&
-                      errors[props.addressId][index] &&
-                      errors[props.addressId][index].lastYearAddressZipCode
-                    }
-                    helperText={
-                      errors &&
-                      errors[props.addressId] &&
-                      errors[props.addressId][index] &&
-                      errors[props.addressId][index].lastYearAddressZipCode &&
-                      errors[props.addressId][index].lastYearAddressZipCode.message
-                    }
-                    variant="outlined"
-                    size="small"
-                    defaultValue={item.lastYearAddressZipCode}
-                    type="text"
-                    label={
-                      "Zip Code " +
-                      (() => {
-                        return reqBits.zipCode == true ? "*" : "";
-                      })()
-                    }
-                    className="col-12"
-                  ></TextField>
+                    <ZipCode
+                      mainId={props.addressId}
+                      subId="lastYearAddressZipCode"
+                      reqBit={reqBits.lastYearAddressZipCode}
+                      index={index}
+                      forms={props.forms}
+                      item={item}
+                      className={"col-12"}
+                    ></ZipCode>
                 </Grid>
                 <FromToDateComponent
                   useForm={props.forms}
@@ -268,8 +238,6 @@ export function DynamicAddressComponent(props: Props) {
 
                     if(fields.length > props.minElementLimit) 
                     {
-                    //console.log("index");  
-                    //console.log(index);  
                       remove(index);
                     }
                   }}
@@ -290,7 +258,7 @@ export function DynamicAddressComponent(props: Props) {
               append(dummyAddrData);
             }}
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

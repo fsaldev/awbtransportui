@@ -32,6 +32,7 @@ import {
   driverLicenseDummyElement,
   tDriverLicenseInfo,
   states,
+  resolveOverFlowYearIssue,
 } from "../../Common/CommonVariables";
 import { update } from "../../services/updateApi";
 import RadioQuestions from ".././SubComponents/RadioQuestions";
@@ -180,6 +181,9 @@ export default function DriverLicense(props: Props) {
                         defaultValue=""
                         variant="outlined"
                         className="col-12"
+                        inputProps={{
+                          max: resolveOverFlowYearIssue(),
+                        }}
                       />
                     </Grid>
                   </Grid>

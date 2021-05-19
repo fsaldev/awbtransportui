@@ -39,6 +39,10 @@ import {
   getMaxDate,
   getMaxAgeLimit,
   autoSubmit,
+  formatSSN,
+  formatZipCode,
+  formatDate,
+  resolveOverFlowYearIssue,
 } from "../Common/CommonVariables";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 
@@ -87,6 +91,11 @@ function EmpApplicationForm1(props: Props) {
   );
 
   const [disableAllUploadButton, setDisableAllUploadButton] = useState(false);
+
+  const [ssnNumber,setSsnNumber] = useState(props.data.socialSecurity);
+  const [dateOfBirth,setDateOfBirth] = useState(props.data.dateofBirth);
+  const [fromDate,setFromDate] = useState(props.data.fromDate);
+  const [zipCodeNumber,setZipCodeNumber] = useState(props.data.companyPostCode);
 
   useEffect(() => {
     // console.log("hideAddressesComponent");
@@ -438,40 +447,7 @@ function EmpApplicationForm1(props: Props) {
                       className="col-8"
                       useForms={Forms}
                     ></PhoneNumberComponent>
-                    {/* <TextField
-                      name="phone_number"
-                      variant="outlined"
-                      size="small"
-                      type="text"
-                      className="col-8"
-                      error={errors.phone_number == undefined ? false : true}
-                      label="Phone Number"
-                      helperText={errors["phone_number"] === undefined ? (RequireError + " " + "+# ### ### #### ext.####") : errors["phone_number"].message}
-                      value={
-                        phonePattern ? phonePattern : manualStates.phone_number
-                      }
-                      inputRef={register({
-                        required: {
-                          value: reqBits.phone_number,
-                          message: RequireError,
-                        },
-                        // pattern:{value:/^[+][0-9]{15,26}$/ , message:"Invalid Input : +# ### ### #### ext.####"}
-                      })}
-                      // onChange={(e)=>{setPhonePatten(e.target.value)}}
-                      onChange={(e:any) => {
-                        let val = e.target.value;
-                        if (val.length > 11) {
-                          const n = formatPhoneNumberIntl(val);
-                          if (n) {
-                            setPhonePatten(n);
-                          } else {
-                            setPhonePatten(val);
-                          }
-                        } else {
-                          setPhonePatten(val);
-                        }
-                      }}
-                    ></TextField> */}
+                
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
@@ -483,7 +459,6 @@ function EmpApplicationForm1(props: Props) {
                       className={classNames("col-8", { "is-invalid": true })}
                       error={errors.email == undefined ? false : true}
                       helperText={errors.email && errors.email?.message}
-                      // value={props.data.email}
                       inputRef={register({
                         required: {
                           value: reqBits.email,
@@ -509,7 +484,7 @@ function EmpApplicationForm1(props: Props) {
                       }}
                       className="col-8"
                       error={errors.dateofBirth == undefined ? false : true}
-                      helperText={"Date of Brith " + RequireError}
+                      helperText={"Your date of brith " + RequireError}
                       inputRef={register({
                         required: {
                           value: reqBits.dateofBirth,
@@ -517,28 +492,7 @@ function EmpApplicationForm1(props: Props) {
                         },
                       })}
                     ></TextField>
-                    {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="MM/dd/yyyy"
-                        name="dateofBirth"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Date picker inline"
-                        inputRef={register({
-                          required: {
-                            value: reqBits.dateofBirth,
-                            message: RequireError,
-                          },
-                        })}
-                        BaseKeyboardPickerProps={}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date",
-                        }}
-                        maxDate={getMaxDate()}
-                      />
-                    </MuiPickersUtilsProvider> */}
+                   
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
@@ -561,11 +515,13 @@ function EmpApplicationForm1(props: Props) {
                           value: reqBits.socialSecurity,
                           message: RequireError,
                         },
-                        minLength: {
-                          value: 9,
-                          message: "Min 9 Digits",
-                        },
                       })}
+                      value={ssnNumber}
+                      onChange={
+                        (e:any)=>{
+                          setSsnNumber(formatSSN(e.target.value));
+                        }
+                      }
                     ></TextField>
                   </Grid>
                   <Grid item xs={12}>
@@ -616,6 +572,9 @@ function EmpApplicationForm1(props: Props) {
                               message: RequireError,
                             },
                           })}
+                          inputProps={{
+                            max: resolveOverFlowYearIssue(),
+                          }}
                         ></TextField>
                       </Grid>
 
@@ -679,29 +638,16 @@ function EmpApplicationForm1(props: Props) {
                           className="col-12"
                           error={errors.zipCode == undefined ? false : true}
                           helperText={errors.zipCode && errors.zipCode?.message}
-                          // onChange={(e) => {
-                          //   let value = e.target.value;
-                          //   if (value == "") return;
-                          //   if (!/^[0-9]+$/i.test(value)) {
-                          //     // console.log(value);
-                          //   //console.log("value");
-                          //   //console.log(value);
-                          //     setError("zipCode", {
-                          //       type: "manual",
-                          //       message: "Only Digits Please",
-                          //     });
-                          //   } else {
-                          //     clearErrors(["zipCode"]);
-                          //   }
-                          // }}
+                          value={zipCodeNumber}
+                          onChange={
+                            (e:any)=>{
+                              setZipCodeNumber(formatZipCode(e.target.value));
+                            }
+                          }
                           inputRef={register({
                             required: {
                               value: reqBits.zipCode,
                               message: RequireError,
-                            },
-                            maxLength: {
-                              value: 5,
-                              message: "Please Input 5 Digits only",
                             },
                             pattern: {
                               value: /[0-9]{5}/,
@@ -1116,7 +1062,7 @@ function EmpApplicationForm1(props: Props) {
                   >
                     <b>NOTE:</b>
                     <i>
-                      Please upload your DOD Medical Card File in PDF format, or
+                      Please upload your DOT Medical Card File in PDF format, or
                       any valid picture format.
                     </i>
                   </Grid>

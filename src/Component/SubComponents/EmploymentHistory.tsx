@@ -31,6 +31,7 @@ import {
   EmploymentHistoryInfo,
   reqBits,
   employmentHistoryDummyElement,
+  resolveOverFlowYearIssue,
 } from "../../Common/CommonVariables";
 import { update } from "../../services/updateApi";
 import RadioQuestions from ".././SubComponents/RadioQuestions";
@@ -156,6 +157,9 @@ export default function EmploymentHistory(props: Props) {
                         variant="outlined"
                         size="small"
                         type="date"
+                        inputProps={{
+                          max: resolveOverFlowYearIssue(),
+                        }}
                         className="col-12"
                         //useForms Handling Start
                         inputRef={register({
@@ -173,6 +177,9 @@ export default function EmploymentHistory(props: Props) {
                         variant="outlined"
                         size="small"
                         type="date"
+                        inputProps={{
+                          max: resolveOverFlowYearIssue(),
+                        }}
                         className="col-12"
                         //useForms Handling Start
                         error={
@@ -533,7 +540,7 @@ export default function EmploymentHistory(props: Props) {
               //console.log(employmentHistoryState);
             }}
           >
-            Add
+            Add More
           </Button>
         </Grid>
       </Grid>

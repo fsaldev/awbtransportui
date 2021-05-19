@@ -859,6 +859,15 @@ export const getMaxDate = () => {
   return date.toISOString().split("T")[0];
 };
 
+export const resolveOverFlowYearIssue = () => {
+  let date = new Date();
+  date.setFullYear(date.getFullYear() + 1000);
+  // max: "2020-01-01",
+  // console.log("date.toLocaleDateString()");
+  // console.log(date.toISOString().split("T")[0]);
+
+  return date.toISOString().split("T")[0];
+};
 
 export const getMaxAgeLimit = () => {
   let date = new Date();
@@ -890,5 +899,18 @@ export const formatOnlyNumbers = (anyString:string) => {
   return formatStringByPattern('(999) 999-9999 ×9999', onlyNumbers);
 };
 
+export const formatSSN = (ssnString:string) => {
+  const onlyNumbers = ssnString.replace(/[^\d]/g, '');
+  return formatStringByPattern('999-99-9999',onlyNumbers);
+}
+
+export const formatDate = (dateOfBirth:string) => {
+  return formatStringByPattern('99/99/9999',dateOfBirth);
+}
+
+export const formatZipCode = (zipCodeString:string) => {
+  const onlyNumbers = zipCodeString.replace(/[^\d]/g, '');
+  return formatStringByPattern('99999',onlyNumbers);
+}
 
 export const autoSubmit = false;
