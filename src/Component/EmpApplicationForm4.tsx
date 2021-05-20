@@ -1542,6 +1542,37 @@ export default function EmpApplicationForm4(props: Props) {
                         </Typography>
                       
                       </Grid>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Typography align="center" variant="h6">
+                          <br />
+                          ACKNOWLEDGMENT AND AGREEMENT
+                          <br />
+                          WITH RESPECT TO DRUG AND ALCOHOL TESTING
+                        </Typography>
+                        <br />
+                        <br />
+                        <Typography align="justify" variant="body2">
+                          I, the undersigned employee hereby certify that I have
+                          been furnished with a copy of the DOT Alcohol and Drug
+                          Testing Program, and that I have read and understand same.
+                          I further certify that I have been provided with
+                          informational material, education and training on the
+                          dangers and problems of drug and alcohol misuse.
+                        </Typography>
+                        <br />
+                        <br />
+                        <Typography align="justify" variant="body2">
+                          I am fully aware, and agree that I may be discharged or
+                          otherwise disciplined for any violation by me of said DOT
+                          Alcohol and Drug Policy, for any failure or refusal to
+                          provide urine and/or breath specimens when requested by my
+                          employer, for the failure or refusal to identify and
+                          certify same, for the failure to cooperate with the forms
+                          and other documents, and/or for any other Alcohol and Drug
+                          Testing Program.
+                        </Typography>
+                        {/* SOME Text Field Remaing */}
+                      </Grid>
                     </Grid>
 
                   </Paper>

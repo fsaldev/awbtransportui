@@ -138,7 +138,7 @@ export default function FromToDateComponent(props:Props){
                     defaultValue={(props.item[props.toId] === undefined || props.item[props.toId] === null || props.item[props.toId] === "") ?  (props.index === 0?(getTodayDate()):"") : (props.item[props.toId]) }
                     size="small"
                     className="col-12"
-                    helperText={"To Date Required *"}
+                    helperText={props.index===0?"If on-going, then put today's date":"To Date Required *"}
                   ></TextField>
                 </Grid>
 

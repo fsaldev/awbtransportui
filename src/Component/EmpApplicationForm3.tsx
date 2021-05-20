@@ -47,6 +47,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import { Addresses, tReferences, getMaxDate, getMaxAgeLimit } from "../Common/CommonVariables";
 import RadioQuestions from "./SubComponents/RadioQuestions";
+import ChipsArray from "./SubComponents/ChipListComponent";
 import AddressesComponent from "./SubComponents/AddressesComponent";
 import EmploymentHistory from "./SubComponents/EmploymentHistory";
 import ErrorBoundary from "./ErrorBoundary";
@@ -71,6 +72,7 @@ import AlertComponent from "./SubComponents/AlertComponent";
 import PhoneNumberComponent from "./SubComponents/PhoneNumberComponent";
 import useWindowDimensionHook from "./MyHook/WindowDimension";
 import { isConstructorDeclaration } from "typescript";
+import FixedTags from "./SubComponents/ChipListComponent";
 
 
 export const useStyles = makeStyles((theme: Theme) =>
@@ -175,8 +177,10 @@ function EmpApplicationForm3(props: Props) {
   const {width} = useWindowDimensionHook(callbackOnWindowResize);
   
   const [sigWidth,setSigWidth] = useState(width);
-  
+  const [listOfStates,setListOfStates] = useState<string[]>([]);
+
   useEffect(() => {
+    console.log(props.data);
     base64SignatureImage = props.data.signature;
     window.scrollTo(0, 0);
     if (base64SignatureImage !== undefined && base64SignatureImage !== "") {
@@ -184,7 +188,13 @@ function EmpApplicationForm3(props: Props) {
       sigPad.current.fromDataURL(base64SignatureImage);
     }
     window.scrollTo(0, 0);
+    setListOfStates(props.data.lastFiveYearStatesOperate.split(','));
   }, []);
+
+  useEffect(()=>{
+    console.log("listOfStates useEffect upper");
+    console.log(listOfStates);
+  },[listOfStates]);
 
   useEffect(() => {
     if (base64SignatureImage !== undefined && base64SignatureImage !== "") {
@@ -255,10 +265,20 @@ function EmpApplicationForm3(props: Props) {
   };
   //-------------SNACKBAR-------------
 
+  function joinObj(a:any, attr:string){
+    var out = [];
   
+    for (var i = 0; i < a.length; i++){
+      out.push(a[i][attr]);
+    }
+  
+    return out.join(",");
+  }
 
   const saveData = async (data:any,saveOnly:boolean) => {
 
+    data.lastFiveYearStatesOperate = joinObj(listOfStates,"value");
+    console.log(data);
     {
       setSignatureError("");
       setSignatureHelperTextError(false);
@@ -305,11 +325,8 @@ function EmpApplicationForm3(props: Props) {
       saveData(watchAll,true);
   }
 
-  const [listOfStates,setListOfStates] = useState(["NA","NA"]);
 
   function handleAddChip(chip:any){
-    listOfStates.push(chip);
-    setListOfStates(listOfStates);
   }
 
   function insertWestStates(e:any)
@@ -333,12 +350,6 @@ function EmpApplicationForm3(props: Props) {
   }
 
   function handleDeleteChip(chip:any, index:number){
-    console.log("list before");
-    console.log(listOfStates);
-    listOfStates.splice(index);
-    console.log("list after");
-    console.log(listOfStates);
-    setListOfStates(listOfStates);
   }
 
   const onSubmit = async (data: any) => {
@@ -1118,41 +1129,22 @@ function EmpApplicationForm3(props: Props) {
                 elevation={3}
                 className={(classes.heading, classes.paperProminantStyle)}
               >
-                {/* <ChipInput
-                  value={listOfStates}
-                  onAdd={(chip) => handleAddChip(chip)}
-                  onDelete={(chip, index) => handleDeleteChip(chip, index)}
+               
+                {/* <FixedTags
+                  name="lastFiveYearStatesOperate"
+                  defaultValues={listOfStates}
+                  setListFunction={setListOfStates}
+                  form={Forms}
                 /> */}
-                {/* <FormControl component="fieldset">
-                  <FormLabel component="legend">Select Multiple States</FormLabel>
-                    <FormGroup aria-label="position" row>
-                      <FormControlLabel
-                        value="West"
-                        control={<Checkbox color="primary" />}
-                        label="West"
-                        labelPlacement="start"
-                        onClick={insertWestStates}
-                      />
-                      <FormControlLabel
-                        value="Mid West"
-                        control={<Checkbox color="primary" />}
-                        label="Mid West"
-                        labelPlacement="start"
-                      />
-                      <FormControlLabel
-                        value="North East"
-                        control={<Checkbox color="primary" />}
-                        label="North East"
-                        labelPlacement="start"
-                      />
-                      <FormControlLabel
-                        value="South"
-                        control={<Checkbox color="primary" />}
-                        label="South"
-                        labelPlacement="start"
-                      />
-                    </FormGroup>
-                </FormControl> */}
+
+                {/* <ChipsArray 
+                  name="lastFiveYearStatesOperate"
+                  error={errors && errors.lastFiveYearStatesOperate}
+                  label="List states operated in, for the last five (5) years: "
+                  defaultValue={listOfStates}
+                  form={Forms}
+                  ></ChipsArray> */}
+
                 <TextField
                   id="outlined-multiline-static"
                   label={`List states operated in, for the last five (5) years: `}

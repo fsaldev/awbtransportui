@@ -111,34 +111,59 @@ function EmpApplicationForm1(props: Props) {
     resumeFile1 = e.target.files[0];
   };
 
+  let propData: { resume: string | any[]; dmvFile: string | any[]; dodMedicalCardFile: string | any[]; driverLicenceFile: string | any[]; };
+
   useEffect(() => {
     window.scrollTo(0, 0);
         if(autoSubmit){
     let watchAll = getValues();
       onSubmit(watchAll );
     }
+    
     // if(true){for(let i = 0; i < 100; i++){saveUnFilledData();}}
+    
+    propData = JSON.parse(JSON.stringify(props.data));
 
 }, []);
 
   let res: any;
   const [response, setResponse] = useState("");
 
+
+
   const handleFileUpload = async (event: any, fileName: string) => {
     if (event.target.files === undefined) return;
     if (disableAllUploadButton === true) return;
-    // console.log("fileName");
-    // console.log(fileName);
 
     setDisableAllUploadButton(true);
 
     const formData = new FormData();
     // if (manualStates.resume == undefined || manualStates.resume == null) {
+    try
+    {
+      // let uploadedFileName = event.target.files[0]?.name;
+      // if(
+      //   propData.resume.includes(uploadedFileName)
+      //   || propData.dmvFile.includes(uploadedFileName)
+      //   || propData.dodMedicalCardFile.includes(uploadedFileName)
+      //   || propData.driverLicenceFile.includes(uploadedFileName)
+      // ) {
+      //   setFileUploadSuccesOrErrorBit("error");
+      //   setFileUploadSuccessSnackOpen(true);
+      //   setResponse("Same File Selected");
+      //   return;
+      // }
 
-    formData.append("file", event.target.files[0], event.target.files[0]?.name);
-    formData.append("user_name", manualStates.user_name);
-    formData.append(fileName, fileName);
-    // formData.append("resume", 'dummy');
+      formData.append("file", event.target.files[0], event.target.files[0]?.name);
+      formData.append("user_name", manualStates.user_name);
+      formData.append(fileName, fileName);
+      // formData.append("resume", 'dummy');
+    }
+    catch(err)
+    {
+      setDisableAllUploadButton(false);
+      return;
+    }
 
     let response = await fileUploadApi(formData);
     // console.log("response uploaded");
@@ -292,6 +317,7 @@ function EmpApplicationForm1(props: Props) {
   const removeUploadedFileFromServer = async (e: any, fileName: string) => {
 
     let res = await deleteFile(props.data.user_name, fileName);
+    console.log(propData);
     if (res.success != undefined) {
       setManualStates({
         ...manualStates,
