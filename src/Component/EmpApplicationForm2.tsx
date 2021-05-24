@@ -280,6 +280,7 @@ function EmpApplicationForm2(props: Props) {
                       variant="contained"
                       color="primary"
                       onClick={() => {
+                        saveUnFilledData();
                         props.handler[1]();
                       }}
                     >

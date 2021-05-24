@@ -175,12 +175,11 @@ function EmpApplicationForm3(props: Props) {
   }
 
   const {width} = useWindowDimensionHook(callbackOnWindowResize);
-  
+
   const [sigWidth,setSigWidth] = useState(width);
-  const [listOfStates,setListOfStates] = useState<string[]>([]);
+  const [listOfStates,setListOfStates] = useState<string>(props.data.lastFiveYearStatesOperate);
 
   useEffect(() => {
-    console.log(props.data);
     base64SignatureImage = props.data.signature;
     window.scrollTo(0, 0);
     if (base64SignatureImage !== undefined && base64SignatureImage !== "") {
@@ -188,13 +187,8 @@ function EmpApplicationForm3(props: Props) {
       sigPad.current.fromDataURL(base64SignatureImage);
     }
     window.scrollTo(0, 0);
-    setListOfStates(props.data.lastFiveYearStatesOperate.split(','));
+    // setListOfStates(props.data.lastFiveYearStatesOperate.split(','));
   }, []);
-
-  useEffect(()=>{
-    console.log("listOfStates useEffect upper");
-    console.log(listOfStates);
-  },[listOfStates]);
 
   useEffect(() => {
     if (base64SignatureImage !== undefined && base64SignatureImage !== "") {
@@ -202,7 +196,6 @@ function EmpApplicationForm3(props: Props) {
       sigPad.current.fromDataURL(base64SignatureImage);
     }
   }, [sigWidth]);
-  
 
   const clearSigPad = () => {
     if (sigPad && sigPad.current) {
@@ -222,10 +215,7 @@ function EmpApplicationForm3(props: Props) {
     }
   }, []);
 
-  
-
   const saveImage = () => {
-  //console.log("base64SignatureImage onEnd");
     if (sigPad.current && !sigPad.current.isEmpty()) {
       setSignatureError("");
       setSignatureHelperTextError(false);
@@ -265,20 +255,11 @@ function EmpApplicationForm3(props: Props) {
   };
   //-------------SNACKBAR-------------
 
-  function joinObj(a:any, attr:string){
-    var out = [];
-  
-    for (var i = 0; i < a.length; i++){
-      out.push(a[i][attr]);
-    }
-  
-    return out.join(",");
-  }
+
 
   const saveData = async (data:any,saveOnly:boolean) => {
 
-    data.lastFiveYearStatesOperate = joinObj(listOfStates,"value");
-    console.log(data);
+    data.lastFiveYearStatesOperate = listOfStates;
     {
       setSignatureError("");
       setSignatureHelperTextError(false);
@@ -463,7 +444,6 @@ function EmpApplicationForm3(props: Props) {
                 <h4>AWB Transport Inc., Employment Application</h4>
               </Paper>
             </Grid>
-
             <Grid item xs={12} sm={12} md={10} style={{ marginBottom: "10px" }}>
               <Grid
                 container
@@ -1129,15 +1109,25 @@ function EmpApplicationForm3(props: Props) {
                 elevation={3}
                 className={(classes.heading, classes.paperProminantStyle)}
               >
-               
-                {/* <FixedTags
-                  name="lastFiveYearStatesOperate"
-                  defaultValues={listOfStates}
-                  setListFunction={setListOfStates}
-                  form={Forms}
-                /> */}
-
-                {/* <ChipsArray 
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-evenly"
+                  alignItems="center"
+                >
+                    <Grid item xs={12} sm={12} md={12}>
+                        <FixedTags
+                            name="lastFiveYearStatesOperate"
+                            defaultValues={listOfStates}
+                            setListFunction={setListOfStates}
+                            form={Forms}
+                            reqBit={reqBits.lastFiveYearStatesOperate}
+                            label="List states operated in, for the last five (5) years: "
+                            className="col-10"
+                          />
+                    </Grid>
+                </Grid>
+                { /* <ChipsArray 
                   name="lastFiveYearStatesOperate"
                   error={errors && errors.lastFiveYearStatesOperate}
                   label="List states operated in, for the last five (5) years: "
@@ -1145,7 +1135,7 @@ function EmpApplicationForm3(props: Props) {
                   form={Forms}
                   ></ChipsArray> */}
 
-                <TextField
+                {/* <TextField
                   id="outlined-multiline-static"
                   label={`List states operated in, for the last five (5) years: `}
                   name="lastFiveYearStatesOperate"
@@ -1159,7 +1149,7 @@ function EmpApplicationForm3(props: Props) {
                   defaultValue={props.data.lastFiveYearStatesOperate}
                   variant="outlined"
                   className="col-10"
-                ></TextField>
+                ></TextField> */}
                 <br />
                 <br />
                 <TextField
@@ -1394,8 +1384,6 @@ function EmpApplicationForm3(props: Props) {
                       defaultSelected={props.data.convictedofafelony}
                       isReq={reqBits.convictedofafelony}
                       actionOnSelection={(e: any) => {
-                      //console.log("Radio Radios");
-                      //console.log(e);
                         if (e.target.value === "Yes") {
                           setLicenseQuestionBits({
                             ...licenseQuestionBits,
@@ -1616,6 +1604,7 @@ function EmpApplicationForm3(props: Props) {
                       variant="contained"
                       color="primary"
                       onClick={() => {
+                        saveUnFilledData();
                         props.handler[1]();
                       }}
                     >

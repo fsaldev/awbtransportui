@@ -33,7 +33,7 @@ import { update } from "../services/updateApi";
 import SignatureCanvas from "react-signature-canvas";
 import ReactHookFormSelect from "./SubComponents/ReactHookFormSelect";
 import RadioQuestions from "./SubComponents/RadioQuestions";
-import { reqBits, RequireError, states,autoSubmit, formatZipCode, resolveOverFlowYearIssue } from "../Common/CommonVariables";
+import { reqBits, RequireError, states,autoSubmit, formatZipCode, resolveOverFlowYearIssue, formatSSN } from "../Common/CommonVariables";
 import { useRef, useState } from "react";
 import ReactAutoComplete from "./SubComponents/ReactAutoComplete";
 import { formatPhoneNumberIntl } from "react-phone-number-input";
@@ -58,6 +58,8 @@ export default function EmpApplicationForm7(props: Props) {
   const [prevEmplpoyerPhonePattern, setprevEmplpoyerPhonePattern] = useState(
     ""
   );
+
+  const [ssnNumber,setSsnNumber] = useState(props.data.socialSecurity);
 
   const callbackOnWindowResize = () => {
   //console.log(width);
@@ -357,6 +359,12 @@ export default function EmpApplicationForm7(props: Props) {
                               message: RequireError,
                             },
                           })}
+                          value={ssnNumber}
+                          onChange={
+                            (e:any)=>{
+                              setSsnNumber(formatSSN(e.target.value));
+                            }
+                          }
                           helperText={
                             errors &&
                             errors.employeeSSNNumber &&
@@ -1231,6 +1239,7 @@ export default function EmpApplicationForm7(props: Props) {
                       variant="contained"
                       color="primary"
                       onClick={() => {
+                        saveUnFilledData();
                         props.handler[1]();
                       }}
                     >

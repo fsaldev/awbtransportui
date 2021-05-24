@@ -81,6 +81,9 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+let files:string[];
+
+
 function EmpApplicationForm1(props: Props) {
   let data = props.data;
   const [manualStates, setManualStates] = useState(data);
@@ -98,33 +101,27 @@ function EmpApplicationForm1(props: Props) {
   const [zipCodeNumber,setZipCodeNumber] = useState(props.data.companyPostCode);
 
   useEffect(() => {
-    // console.log("hideAddressesComponent");
-    // console.log(hideAddressesComponent);
     if (hideAddressesComponent === false) {
       data.addresses = "";
     }
   }, [hideAddressesComponent]);
 
-  let resumeFile1 = undefined;
-
-  const handleMultipleFiles = (e: any) => {
-    resumeFile1 = e.target.files[0];
-  };
-
   let propData: { resume: string | any[]; dmvFile: string | any[]; dodMedicalCardFile: string | any[]; driverLicenceFile: string | any[]; };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-        if(autoSubmit){
-    let watchAll = getValues();
+    if(autoSubmit){
+      let watchAll = getValues();
       onSubmit(watchAll );
     }
-    
-    // if(true){for(let i = 0; i < 100; i++){saveUnFilledData();}}
-    
+
     propData = JSON.parse(JSON.stringify(props.data));
 
-}, []);
+    files = [props.data.resume,props.data.dmvFile,props.data.dodMedicalCardFile,props.data.driverLicenceFile];
+
+    files = files.map((val)=>val === undefined ? "" : val);
+ 
+  }, []);
 
   let res: any;
   const [response, setResponse] = useState("");
@@ -136,28 +133,28 @@ function EmpApplicationForm1(props: Props) {
     if (disableAllUploadButton === true) return;
 
     setDisableAllUploadButton(true);
-
     const formData = new FormData();
-    // if (manualStates.resume == undefined || manualStates.resume == null) {
     try
     {
-      // let uploadedFileName = event.target.files[0]?.name;
-      // if(
-      //   propData.resume.includes(uploadedFileName)
-      //   || propData.dmvFile.includes(uploadedFileName)
-      //   || propData.dodMedicalCardFile.includes(uploadedFileName)
-      //   || propData.driverLicenceFile.includes(uploadedFileName)
-      // ) {
-      //   setFileUploadSuccesOrErrorBit("error");
-      //   setFileUploadSuccessSnackOpen(true);
-      //   setResponse("Same File Selected");
-      //   return;
-      // }
+      let uploadedFileName = event.target.files[0]?.name;
+      if (
+            files[0].includes(uploadedFileName)
+        ||  files[1].includes(uploadedFileName)
+        ||  files[2].includes(uploadedFileName)
+        ||  files[3].includes(uploadedFileName)
+      )
+      {
+          setFileUploadSuccesOrErrorBit("error");
+          setFileUploadSuccessSnackOpen(true);
+          setResponse("Same File Selected");
+          return;
+      }
+
+      sameFileUploadHandling(fileName, uploadedFileName);
 
       formData.append("file", event.target.files[0], event.target.files[0]?.name);
       formData.append("user_name", manualStates.user_name);
       formData.append(fileName, fileName);
-      // formData.append("resume", 'dummy');
     }
     catch(err)
     {
@@ -166,12 +163,7 @@ function EmpApplicationForm1(props: Props) {
     }
 
     let response = await fileUploadApi(formData);
-    // console.log("response uploaded");
     res = await response.json();
-    // console.log("res");
-    // console.log(res);
-    // console.log(res.error);
-    // if (response.ok === true && response.status === 200) {
     if (res.status === "true") {
       setFileUploadSuccesOrErrorBit("success");
       setFileUploadSuccessSnackOpen(true);
@@ -180,7 +172,6 @@ function EmpApplicationForm1(props: Props) {
         ...manualStates,
         [fileName]: event.target.files[0]?.name,
       });
-
 
     } else {
       setFileUploadSuccesOrErrorBit("error");
@@ -194,8 +185,7 @@ function EmpApplicationForm1(props: Props) {
     defaultValues: data,
     shouldFocusError: true,
   });
-  // console.log("data");
-  // console.log(data);
+
   const {
     register,
     handleSubmit,
@@ -206,8 +196,6 @@ function EmpApplicationForm1(props: Props) {
     formState,
     getValues,
   } = Forms;
-
-
 
   const [succesOrErrorBit, setSuccesOrErrorBit] = useState("success");
   const [fileUploadSuccesOrErrorBit, setFileUploadSuccesOrErrorBit] = useState(
@@ -222,15 +210,10 @@ function EmpApplicationForm1(props: Props) {
 
     const saveData = async (data:any,saveOnly:boolean) => {
       data.user_name = manualStates.user_name;
-      // console.log("arg data");
-      // console.log(data);
       let resdata;
       resdata = await update(data);
-      // console.log("response resdata");
-      // console.log(resdata);
       if (resdata.data){
         try {
-          // console.log(resdata);
           setSuccesOrErrorBit("success");
           if(saveOnly){
             setSaveOnlySuccessSnackOpen(true);
@@ -238,11 +221,7 @@ function EmpApplicationForm1(props: Props) {
             props.setData(resdata.data.data);
             setSuccessSnackOpen(true);
           }
-
         } catch (ex) {
-          // console.log("Error Exaption Seerver Error");
-          // console.log(resdata);
-          // console.log(ex);
           setSuccesOrErrorBit("error");
           if(saveOnly){
             setSaveOnlySuccessSnackOpen(true);
@@ -255,7 +234,6 @@ function EmpApplicationForm1(props: Props) {
 
   const saveUnFilledData = async () => {
     let watchAll = getValues();
-    // console.log(watchAll);
     await saveData(watchAll,true);
   }
 
@@ -314,7 +292,31 @@ function EmpApplicationForm1(props: Props) {
     );
   };
 
+  function sameFileUploadHandling( fileName:string , value:string) {
+      switch(fileName)
+      {
+
+        case "resume":
+              files[0]  = value;
+            break;
+        
+        case "dmvFile":
+              files[1]  = value;
+            break;
+        
+        case "dodMedicalCardFile":
+              files[2]  = value;
+            break;
+        
+        case "driverLicenceFile":
+              files[3]  = value;
+            break;
+      }
+  }
+
   const removeUploadedFileFromServer = async (e: any, fileName: string) => {
+    
+    sameFileUploadHandling(fileName, "");
 
     let res = await deleteFile(props.data.user_name, fileName);
     console.log(propData);
@@ -848,7 +850,10 @@ function EmpApplicationForm1(props: Props) {
                   id="resumeFilesToUpload"
                   type="file"
                   disabled={disableAllUploadButton}
-                  onChange={(e) => {
+                  onClick={(e:any)=>{
+                    e.target.value = "";
+                  }}
+                  onInput={(e) => {
                     handleFileUpload(e, "resume");
                   }}
                 />
@@ -950,7 +955,10 @@ function EmpApplicationForm1(props: Props) {
                   id="dmvFilesToUpload"
                   type="file"
                   disabled={disableAllUploadButton}
-                  onChange={(e) => {
+                  onClick={(e:any)=>{
+                    e.target.value = "";
+                  }}
+                  onInput={(e) => {
                     handleFileUpload(e, "dmvFile");
                   //console.log("DVM FIle");
                   }}
@@ -1059,7 +1067,7 @@ function EmpApplicationForm1(props: Props) {
                   id="dodMedicalCardFilesToUpload"
                   type="file"
                   disabled={disableAllUploadButton}
-                  onChange={(e) => {
+                  onInputCapture={(e) => {
                     handleFileUpload(e, "dodMedicalCardFile");
                   //console.log("DVM FIle");
                   }}
@@ -1168,7 +1176,10 @@ function EmpApplicationForm1(props: Props) {
                   id="driverLicenceFilesToUpload"
                   type="file"
                   disabled={disableAllUploadButton}
-                  onChange={(e) => {
+                  onClick={(e:any)=>{
+                    e.target.value = "";
+                  }}
+                  onInput={(e) => {
                     handleFileUpload(e, "driverLicenceFile");
                   //console.log("DVM FIle");
                   }}

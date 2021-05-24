@@ -58,8 +58,8 @@ export default function EmpApplicationForm4(props: Props) {
             </Grid>
 
             <Grid item xs={12} sm={12} md={10} style={{ marginBottom: "10px" , textAlign:"center"}}>
-              <div id="div1" style={{height:"600px"}}>
-                <div id="div2" style={{height:"inherit",overflow:"auto" ,border:"1px dashed black", textAlign:"center" , alignContent:"center", alignItems:"center"}}>
+              <div id="div1" style={{height:"500px"}}>
+                <div id="div2" style={{height:"inherit", overflow:"scroll", paddingLeft:"5px" , paddingRight:"4px", scrollbarWidth:"none", textAlign:"center" , alignContent:"center", alignItems:"center"}}>
                 {/* PAGE 1 */}
                   <Paper
                     elevation={3}

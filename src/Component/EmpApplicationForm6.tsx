@@ -416,6 +416,7 @@ export default function EmpApplicationForm6(props: Props) {
                       variant="contained"
                       color="primary"
                       onClick={() => {
+                        saveUnFilledData();
                         props.handler[1]();
                       }}
                     >
@@ -424,7 +425,9 @@ export default function EmpApplicationForm6(props: Props) {
                   </Grid>
                   <Grid item xs={8} sm={7} md={4}>
                     <Button
-                      onClick={()=>{saveUnFilledData();}}
+                      onClick={()=>{
+                        saveUnFilledData();
+                      }}
                       className="col-8 mt-3"
                       variant="contained"
                       color="primary"
@@ -464,7 +467,7 @@ export default function EmpApplicationForm6(props: Props) {
           open={snackOpen}
           onClose={handleClose}
           severity={succesOrErrorBit}
-          message="Accepted the All Terms and Conditions"
+          message="Data Saved Successfully"
           // message={succesOrErrorBit === "success" ? "Success" : "Error"}
         ></AlertComponent>
       </Container>
